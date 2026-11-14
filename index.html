@@ -1,35 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tarefas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CareLog — Sua To-Do List gamificada de Autocuidado em estilo Pixel Art Cozy.">
+  <title>CareLog — Diário de Autocuidado</title>
+
+  <!--
+    IMPORTAÇÃO DE FONTES (Google Fonts):
+    - 'Press Start 2P': Fonte clássica de jogos 8-bit para títulos, logo e rótulos retrô.
+    - 'VT323': Fonte pixelada maior e confortável para subtítulos e contadores.
+    - 'Quicksand': Fonte sans-serif arredondada e muito legível para o texto das tarefas.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Folha de estilos principal -->
+  <link rel="stylesheet" href="style.css">
+
+  <!--
+    MÓDULOS ES6 NATIVOS (type="module"):
+    O atributo type="module" avisa ao navegador que este arquivo JS usa 'import' e 'export'.
+    Além disso, scripts do tipo module possuem o comportamento 'defer' automaticamente:
+    eles só executam depois que todo o HTML foi lido e montado na memória (DOM).
+  -->
+  <script type="module" src="src/app.js"></script>
 </head>
 <body>
 
+  <!-- Container central translúcido com estética de janela de RPG retrô aconchegante -->
+  <main class="carelog-window">
 
-    <input type="text">
-    <button>+</button>
+    <!-- CABEÇALHO: Logo em Pixel Art (SVG Inline) + Título da Aplicação -->
+    <header class="app-header">
+      <div class="brand">
+        <!--
+          ÍCONE EM PIXEL ART (SVG Inline):
+          Cada tag <rect> desenha um "pixel" ou bloco de pixels em uma grade 16x16.
+          Usamos shape-rendering="crispEdges" para manter as bordas nítidas sem borrões!
+        -->
+        <svg class="pixel-logo" viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges" aria-hidden="true">
+          <!-- Folhinhas da mudinha (Verde Sálvia e Verde Claro) -->
+          <rect x="4" y="2" width="3" height="1" fill="#6b9080" />
+          <rect x="3" y="3" width="4" height="2" fill="#84a98c" />
+          <rect x="5" y="5" width="2" height="1" fill="#6b9080" />
+          <rect x="9" y="1" width="3" height="1" fill="#6b9080" />
+          <rect x="9" y="2" width="4" height="2" fill="#a3b18a" />
+          <rect x="9" y="4" width="2" height="1" fill="#6b9080" />
+          <!-- Caule central -->
+          <rect x="7" y="4" width="2" height="4" fill="#52796f" />
+          <!-- Borda superior do vasinho (Terracota Pastel) -->
+          <rect x="3" y="8" width="10" height="2" fill="#e07a5f" />
+          <rect x="4" y="8" width="2" height="1" fill="#f2cc8f" />
+          <!-- Corpo do vasinho com coraçãozinho pixelado -->
+          <rect x="4" y="10" width="8" height="4" fill="#d46a50" />
+          <rect x="5" y="14" width="6" height="1" fill="#b5533c" />
+          <!-- Detalhe de brilho/coração no vaso -->
+          <rect x="7" y="11" width="2" height="2" fill="#f4f1de" />
+        </svg>
 
-    <ul>
-        <li>
-            <input type="checkbox">
-            Task 1
-        </li>
+        <div class="brand-text">
+          <h1 class="app-title">CareLog</h1>
+          <p class="app-subtitle">Seu refúgio diário de autocuidado</p>
+        </div>
+      </div>
 
-        <li>
-            <input type="checkbox">
-            Task 2
-        </li>
+      <span class="retro-badge" aria-label="Versão 1.0 Cozy">LVL 1 • COZY</span>
+    </header>
 
-        <li>
-            <input type="checkbox">
-            Task 3
-        </li>
-    </ul>
+    <!-- SEÇÃO 1: Frase Inspiradora Diária (Consumida via Fetch API em src/api.js) -->
+    <section class="quote-section" aria-label="Mensagem inspiradora do dia">
+      <div class="quote-header">
+        <span class="quote-label">✨ Sabedoria do Dia</span>
+        <button type="button" id="refresh-quote-btn" class="btn-mini-retro" title="Buscar nova frase">
+          ↻ Nova
+        </button>
+      </div>
+      <blockquote id="daily-quote" class="quote-text">
+        Carregando mensagem acolhedora...
+      </blockquote>
+      <p id="quote-source" class="quote-source"></p>
+    </section>
 
-  
+    <!-- SEÇÃO 2: Barra de Progresso Gamificada ("HP de Autocuidado do Dia") -->
+    <section class="hp-section" aria-labelledby="hp-title">
+      <div class="hp-header">
+        <h2 id="hp-title" class="hp-title">💚 HP de Autocuidado do Dia</h2>
+        <span id="hp-stats" class="hp-stats" aria-live="polite">0/0 (0%)</span>
+      </div>
 
-    
+      <!-- Moldura retrô da barra de progresso -->
+      <div class="hp-bar-track" role="progressbar" aria-labelledby="hp-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="hp-progressbar">
+        <div id="hp-bar-fill" class="hp-bar-fill" style="width: 0%;"></div>
+      </div>
+
+      <p id="hp-status-message" class="hp-message">
+        Pequenos gestos gentis recarregam sua energia.
+      </p>
+    </section>
+
+    <!-- SEÇÃO 3: Formulário Nativo para Adicionar Hábito de Autocuidado -->
+    <section class="form-section" aria-label="Adicionar novo cuidado">
+      <!--
+        POR QUE USAR <form> NATIVO?
+        Usar a tag <form> permite que o usuário envie a tarefa tanto clicando no botão
+        quanto pressionando a tecla "Enter" no teclado gratuitamente, além de ser
+        muito mais acessível para leitores de tela.
+      -->
+      <form id="care-form" class="care-form">
+        <div class="form-inputs">
+          <label for="care-category" class="sr-only">Categoria de autocuidado</label>
+          <select id="care-category" name="category" class="retro-select" aria-label="Categoria">
+            <option value="Corpo">🌿 [Corpo]</option>
+            <option value="Mente">☁️ [Mente]</option>
+            <option value="Ambiente">🏡 [Ambiente]</option>
+          </select>
+
+          <label for="care-input" class="sr-only">Qual gesto de autocuidado você quer praticar hoje?</label>
+          <input
+            type="text"
+            id="care-input"
+            name="title"
+            class="retro-input"
+            placeholder="Ex.: Alongar os ombros por 2 min..."
+            maxlength="90"
+            required
+            autocomplete="off"
+          >
+        </div>
+
+        <button type="submit" class="btn-retro btn-primary">
+          + Adicionar
+        </button>
+      </form>
+    </section>
+
+    <!-- SEÇÃO 4: Lista de Tarefas de Autocuidado -->
+    <section class="list-section" aria-labelledby="list-heading">
+      <div class="list-header">
+        <h2 id="list-heading" class="section-title">Missões Gentis de Hoje</h2>
+        <button type="button" id="reset-defaults-btn" class="btn-link-retro" title="Restaurar as 3 tarefas iniciais">
+          Restaurar padrão
+        </button>
+      </div>
+
+      <!--
+        A lista <ul> começa vazia no HTML porque o JavaScript (src/view.js)
+        vai ler os dados do localStorage (src/state.js) e desenhar cada <li> aqui dentro!
+      -->
+      <ul id="care-list" class="care-list" aria-live="polite"></ul>
+
+      <!-- Estado vazio: exibido apenas quando todas as tarefas forem removidas -->
+      <div id="empty-state" class="empty-state" hidden>
+        <p class="empty-icon" aria-hidden="true">🍵</p>
+        <p class="empty-title">Sua lista está em paz e vazia!</p>
+        <p class="empty-desc">Adicione um novo hábito acima ou clique em "Restaurar padrão".</p>
+      </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="app-footer">
+      <p>Feito com calma em Vanilla JS • Seus dados ficam salvos neste navegador 💾</p>
+    </footer>
+
+  </main>
+
 </body>
 </html>

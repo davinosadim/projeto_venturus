@@ -1,0 +1,612 @@
+/* ==========================================================================
+   CARELOG — ESTILIZAÇÃO PIXEL ART CLEAN & COZY (style.css)
+   ==========================================================================
+   Dica para Iniciantes:
+   Organizamos o CSS de cima para baixo, indo do mais geral (:root, reset, body)
+   para o mais específico (cabeçalho, barra de HP, formulário, lista e botões).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIÁVEIS CSS (:root)
+   --------------------------------------------------------------------------
+   Por que usar variáveis CSS?
+   Se você quiser mudar o tom de verde ou a cor das bordas no futuro, basta
+   alterar o valor aqui no :root e o site inteiro atualiza automaticamente!
+   -------------------------------------------------------------------------- */
+:root {
+  /* Paleta Pastel & Cozy */
+  --bg-sage-light: #dce6df;      /* Verde sálvia clarinho para o fundo */
+  --bg-cream-window: rgba(253, 250, 243, 0.92); /* Bege translúcido da janela central */
+  --bg-card: #ffffff;            /* Fundo branco suave dos cartões */
+  --bg-card-completed: #eef4f0;  /* Fundo esverdeado suave para tarefa concluída */
+  --bg-lavender-soft: #eeeaf8;   /* Lavanda suave para o bloco de citação */
+
+  /* Cores de Destaque */
+  --accent-sage: #749f82;        /* Verde sálvia principal (botões e barra de HP) */
+  --accent-sage-dark: #557c63;   /* Verde sálvia escuro (hover e detalhes) */
+  --accent-lavender: #9f8ec9;    /* Lavanda média (detalhes e etiquetas) */
+  --accent-peach: #e58f7c;       /* Pêssego/terracota suave (botão de remover) */
+  --accent-gold: #f3c663;        /* Dourado pastel para brilhos */
+
+  /* Cores das Categorias */
+  --cat-corpo-bg: #dff2e6;
+  --cat-corpo-text: #2f6644;
+  --cat-mente-bg: #e8e2f8;
+  --cat-mente-text: #513b8a;
+  --cat-ambiente-bg: #faecd8;
+  --cat-ambiente-text: #82531c;
+
+  /* Bordas e Textos (Usamos marrom-café escuro em vez de preto puro #000
+     para deixar o visual muito mais aconchegante aos olhos!) */
+  --ink-dark: #38302e;
+  --ink-muted: #6f6561;
+  --border-retro: #38302e;
+
+  /* Sombras Sólidas Estilo Retrô / Pixel Art (sem esfumaçado!) */
+  --shadow-window: 8px 8px 0px rgba(56, 48, 46, 0.25);
+  --shadow-retro: 4px 4px 0px var(--border-retro);
+  --shadow-retro-sm: 2px 2px 0px var(--border-retro);
+
+  /* Tipografia */
+  --font-pixel-title: 'Press Start 2P', monospace;
+  --font-pixel-ui: 'VT323', monospace;
+  --font-body: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET BÁSICO E ACESSIBILIDADE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  /* box-sizing: border-box faz com que padding e borda sejam incluídos dentro
+     da largura (width) do elemento, evitando que os itens vazem da tela. */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Classe utilitária para Leitores de Tela (Screen Readers):
+   Esconde o texto visualmente, mas permite que pessoas com deficiência visual
+   ouçam o rótulo do campo através do leitor de tela. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. FUNDO COM WALLPAPER PIXEL ART & LAYOUT PRINCIPAL
+   --------------------------------------------------------------------------
+   Aqui usamos um SVG embutido (Data URI) desenhado em blocos de Pixel Art
+   (nuvens, estrelinhas e colinas em tons pastéis) combinado com um gradiente
+   aconchegante. Assim o wallpaper funciona até mesmo sem internet!
+   -------------------------------------------------------------------------- */
+body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink-dark);
+  line-height: 1.5;
+  padding: 2rem 1rem;
+
+  /* Centraliza a janela do CareLog na tela com Flexbox */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  /* Wallpaper Pixel Art Cozy (Padrão repetido de nuvens, estrelas e pontinhos 8-bit) */
+  background-color: var(--bg-sage-light);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3C!-- Estrelinha Pixel Dourada --%3E%3Crect x='6' y='5' width='1' height='3' fill='%23fff8d6'/%3E%3Crect x='5' y='6' width='3' height='1' fill='%23fff8d6'/%3E%3C!-- Nuvem Pixel Lavanda/Branca --%3E%3Crect x='18' y='8' width='6' height='1' fill='%23ffffff' fill-opacity='0.75'/%3E%3Crect x='16' y='9' width='10' height='2' fill='%23ffffff' fill-opacity='0.75'/%3E%3Crect x='17' y='11' width='8' height='1' fill='%23dcd6f7' fill-opacity='0.65'/%3E%3C!-- Folhinha/Broto Pixel Sálvia --%3E%3Crect x='7' y='22' width='4' height='1' fill='%23ffffff' fill-opacity='0.65'/%3E%3Crect x='5' y='23' width='8' height='2' fill='%23ffffff' fill-opacity='0.65'/%3E%3Crect x='6' y='25' width='6' height='1' fill='%23bcd2c4' fill-opacity='0.65'/%3E%3C!-- Brilho Pixel --%3E%3Crect x='25' y='24' width='1' height='1' fill='%23fff8d6'/%3E%3Crect x='12' y='15' width='1' height='1' fill='%23ffffff' fill-opacity='0.8'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #dcd6f7 0%, #e5ece7 48%, #d2e0d6 100%);
+  background-attachment: fixed;
+  image-rendering: pixelated;
+}
+
+/* --------------------------------------------------------------------------
+   4. CONTAINER CENTRAL TRANSLÚCIDO (Janela Retrô)
+   -------------------------------------------------------------------------- */
+.carelog-window {
+  width: 100%;
+  max-width: 620px;
+  background-color: var(--bg-cream-window);
+  backdrop-filter: blur(6px); /* Efeito translúcido suave sobre o wallpaper */
+  border: 3px solid var(--border-retro);
+  border-radius: 6px;
+  padding: 1.75rem;
+  box-shadow: var(--shadow-retro), var(--shadow-window);
+
+  /* Efeito chanfrado interno sutil como nas janelas de jogos clássicos */
+  outline: 3px solid rgba(255, 255, 255, 0.7);
+  outline-offset: -6px;
+}
+
+/* --------------------------------------------------------------------------
+   5. CABEÇALHO & LOGOTIPO PIXEL ART
+   -------------------------------------------------------------------------- */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px dashed #c8bfb8;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.pixel-logo {
+  background-color: #f6efe2;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: var(--shadow-retro-sm);
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-family: var(--font-pixel-title);
+  font-size: 1.35rem;
+  color: var(--ink-dark);
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0px #dcd6f7;
+  margin-bottom: 0.25rem;
+}
+
+.app-subtitle {
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.retro-badge {
+  font-family: var(--font-pixel-ui);
+  font-size: 1.15rem;
+  background-color: var(--bg-lavender-soft);
+  color: var(--cat-mente-text);
+  border: 2px solid var(--border-retro);
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+/* --------------------------------------------------------------------------
+   6. SEÇÃO DA FRASE INSPIRADORA (API)
+   -------------------------------------------------------------------------- */
+.quote-section {
+  background-color: var(--bg-lavender-soft);
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.quote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.quote-label {
+  font-family: var(--font-pixel-title);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--cat-mente-text);
+}
+
+.quote-text {
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--ink-dark);
+  font-style: italic;
+}
+
+.quote-source {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-top: 0.3rem;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   7. BARRA DE PROGRESSO ("HP DE AUTOCUIDADO DO DIA")
+   -------------------------------------------------------------------------- */
+.hp-section {
+  background-color: #f5efe6;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.4rem;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.hp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.55rem;
+  gap: 0.5rem;
+}
+
+.hp-title {
+  font-family: var(--font-pixel-title);
+  font-size: 0.72rem;
+  color: var(--ink-dark);
+}
+
+.hp-stats {
+  font-family: var(--font-pixel-ui);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-sage-dark);
+}
+
+/* Trilho externo da barra de HP */
+.hp-bar-track {
+  width: 100%;
+  height: 22px;
+  background-color: #e2dcd3;
+  border: 2px solid var(--border-retro);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Preenchimento que cresce conforme concluímos tarefas */
+.hp-bar-fill {
+  height: 100%;
+  width: 0%;
+  /* Listras sutis para dar textura de barra de HP de videogame 16-bit */
+  background-color: var(--accent-sage);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.2) 0px,
+    rgba(255, 255, 255, 0.2) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+}
+
+.hp-message {
+  margin-top: 0.5rem;
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   8. FORMULÁRIO DE NOVA TAREFA & BOTÕES RETRÔ
+   -------------------------------------------------------------------------- */
+.form-section {
+  margin-bottom: 1.5rem;
+}
+
+.care-form {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.form-inputs {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  min-width: 240px;
+}
+
+.retro-select,
+.retro-input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-dark);
+  background-color: #ffffff;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 0.65rem 0.75rem;
+  box-shadow: var(--shadow-retro-sm);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.retro-select {
+  cursor: pointer;
+  background-color: #faf6f0;
+}
+
+.retro-input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.retro-select:focus,
+.retro-input:focus {
+  outline: none;
+  background-color: #fffdf9;
+  border-color: var(--accent-sage-dark);
+}
+
+/* Botão Retrô Principal com animação clássica de clique */
+.btn-retro {
+  font-family: var(--font-pixel-title);
+  font-size: 0.7rem;
+  cursor: pointer;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-retro);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+  user-select: none;
+}
+
+.btn-primary {
+  background-color: var(--accent-sage);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-sage-dark);
+}
+
+/* EFEITO CLÁSSICO DE BOTÃO RETRÔ:
+   Ao clicar (:active), o botão desce 2px e a sombra diminui,
+   simulando um botão físico sendo pressionado! */
+.btn-retro:active,
+.btn-mini-retro:active,
+.task-delete-btn:active,
+.task-check-btn:active {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0px var(--border-retro);
+}
+
+.btn-mini-retro {
+  font-family: var(--font-pixel-ui);
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: var(--ink-dark);
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 0.1rem 0.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.btn-mini-retro:hover {
+  background-color: #f6efe2;
+}
+
+/* --------------------------------------------------------------------------
+   9. LISTA DE TAREFAS DE AUTOCUIDADO
+   -------------------------------------------------------------------------- */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.section-title {
+  font-family: var(--font-pixel-title);
+  font-size: 0.78rem;
+  color: var(--ink-dark);
+}
+
+.btn-link-retro {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-link-retro:hover {
+  color: var(--ink-dark);
+}
+
+.care-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* Item individual da lista (<li>) */
+.care-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: var(--shadow-retro-sm);
+  transition: background-color 0.25s ease, transform 0.15s ease, opacity 0.25s ease;
+}
+
+.care-item:hover {
+  transform: translateX(2px);
+}
+
+/* Lado esquerdo do item: botão checkbox + etiqueta + texto */
+.care-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+/* Checkbox estilo Pixel Art customizado */
+.task-check-btn {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  background-color: #faf6f0;
+  color: transparent;
+  font-family: var(--font-pixel-title);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-retro-sm);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Etiquetas de Categoria ([Corpo], [Mente], [Ambiente]) */
+.category-badge {
+  font-family: var(--font-pixel-ui);
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.05rem 0.45rem;
+  border: 1.5px solid var(--border-retro);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.category-corpo {
+  background-color: var(--cat-corpo-bg);
+  color: var(--cat-corpo-text);
+}
+
+.category-mente {
+  background-color: var(--cat-mente-bg);
+  color: var(--cat-mente-text);
+}
+
+.category-ambiente {
+  background-color: var(--cat-ambiente-bg);
+  color: var(--cat-ambiente-text);
+}
+
+.care-text {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink-dark);
+  word-break: break-word;
+  transition: color 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   FEEDBACK SUAVE AO CONCLUIR TAREFA (.is-completed)
+   Quando o usuário marca a tarefa como feita, a view.js adiciona a classe
+   .is-completed no <li>, mudando a cor do fundo e riscando o texto!
+   -------------------------------------------------------------------------- */
+.care-item.is-completed {
+  background-color: var(--bg-card-completed);
+  opacity: 0.82;
+}
+
+.care-item.is-completed .task-check-btn {
+  background-color: var(--accent-sage);
+  color: #ffffff;
+}
+
+.care-item.is-completed .care-text {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  color: var(--ink-muted);
+}
+
+/* Botão de Remover Tarefa */
+.task-delete-btn {
+  background-color: #fff2ef;
+  color: #a64432;
+  border: 2px solid var(--border-retro);
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-retro-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+}
+
+.task-delete-btn:hover {
+  background-color: var(--accent-peach);
+  color: #ffffff;
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px dashed #b8afa8;
+  border-radius: 4px;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.empty-title {
+  font-weight: 700;
+  color: var(--ink-dark);
+}
+
+.empty-desc {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   10. RODAPÉ & RESPONSIVIDADE PARA CELULARES
+   -------------------------------------------------------------------------- */
+.app-footer {
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 2px dashed #c8bfb8;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 1rem 0.6rem;
+  }
+
+  .carelog-window {
+    padding: 1.2rem;
+  }
+
+  .app-title {
+    font-size: 1.1rem;
+  }
+
+  .form-inputs {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-retro {
+    width: 100%;
+  }
+}
